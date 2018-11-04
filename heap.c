@@ -61,7 +61,12 @@ heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp) {
 }
 
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp) {
+	heap_t * heap = heap_crear_arr(elementos, cmp);
 
+	for(size_t i = cant - 1; i >= 0; i--) 
+		elementos[i] = heap_desencolar(heap);
+	
+	heap_destruir(heap);
 }
 
 
@@ -103,11 +108,6 @@ bool heap_encolar(heap_t *heap, void *elem) {
 }
 
 void *heap_desencolar(heap_t *heap) {
-
-}
-
-
-void pruebas_heap_alumno(void) {
 
 }
 

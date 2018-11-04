@@ -161,7 +161,8 @@ void downheap(void** datos,size_t cantidad;size_t pos_inicial,cmp_func_t cmp){
 		swap(datos[pos_inicial], datos[pos_hijo_izq]);
 		downheap(datos,cantidad,pos_hijo_izq, cmp);
 	}
-	else if(cmp(datos[pos_inicial],datos[pos_hijo_der]) > 0){
+	
+	if(cmp(datos[pos_inicial],datos[pos_hijo_der]) > 0){
 		swap(datos[pos_inicial], datos[pos_hijo_der]);
 		downheap(datos,cantidad,pos_hijo_der, cmp);
 	}	

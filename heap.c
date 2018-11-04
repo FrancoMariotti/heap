@@ -17,6 +17,8 @@ heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp) {
 	
 	heap_t* heap=heap_crear(cmp);
 	
+	if(!heap)return NULL;
+	
 	for(int i=0;i<n;i++) heap->datos[i]=arreglo[i];
 	
 	return heap;

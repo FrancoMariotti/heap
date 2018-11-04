@@ -12,7 +12,6 @@ heap_t *heap_crear(cmp_func_t cmp) {
 	
 }
 
-
 heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp) {
 	
 	heap_t* heap=heap_crear(cmp);
@@ -23,6 +22,7 @@ heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp) {
 	
 	return heap;
 }
+
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp) {
 
 }
@@ -31,6 +31,7 @@ void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp) {
 bool heap_esta_vacio(const heap_t *heap){
 	return heap->cantidad==0;	
 }
+
 size_t heap_cantidad(const heap_t *heap){
 	return heap->cantidad;
 }
@@ -40,9 +41,13 @@ void *heap_ver_max(const heap_t *heap){
 	return heap->datos[0];
 }
 
-
 void heap_destruir(heap_t *heap, void destruir_elemento(void *e)) {
-
+	if(destruir_elemento){
+		for(int i=0;i<heap->cantidad;i++) destruir_elemento(heap->datos[i]);		
+	}
+	
+	free(heap->datos);
+	free(heap);
 }
 
 

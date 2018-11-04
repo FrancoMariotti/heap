@@ -13,7 +13,11 @@
 #define HIJO_IZQ(padre) (size_t)((padre * 2) + 1)
 #define HIJO_DER(padre) (size_t)((padre * 2) + 2)
 
-/* Dado dos elementos, se intercambian entre ellos.
+/* Dado un vector de datos y dos posiciones, 
+ * se intercambian los elementos de las posiciones.
+ * Pre: i y j pertenecen a datos.
+ * Post: los elementos de la posición i y j
+ * se verán intercambiados.
  */
 void swap(void * datos[], size_t i, size_t j);
 void upheap(heap_t * heap, size_t i);
@@ -34,12 +38,6 @@ struct heap{
 	size_t tam;
 };
 
-void heap_mostrar(heap_t * heap, mostrar_func_t mostrar) {
-
-	for(size_t i = 0; i < heap->cant; i++){
-		mostrar(heap->datos[i]);
-	}
-}
 /*****************************************************
  *                PRIMITIVAS HEAP
  *****************************************************/
@@ -161,14 +159,14 @@ void downheap(void** datos, size_t cantidad, size_t pos_inicial, cmp_func_t cmp)
 	
 	if(pos_hijo_izq >= cantidad) return;
 	
-	if(cmp(datos[pos_inicial], datos[pos_hijo_izq]) > 0){
+	if(cmp(datos[pos_inicial], datos[pos_hijo_izq]) < 0){
 		swap(datos, pos_inicial, pos_hijo_izq);
 		downheap(datos, cantidad, pos_hijo_izq, cmp);
 	}
 	
 	if(pos_hijo_der >= cantidad) return;
 	
-	if(cmp(datos[pos_inicial], datos[pos_hijo_der]) > 0){
+	if(cmp(datos[pos_inicial], datos[pos_hijo_der]) < 0){
 		swap(datos, pos_inicial, pos_hijo_der);
 		downheap(datos, cantidad, pos_hijo_der, cmp);
 	}	

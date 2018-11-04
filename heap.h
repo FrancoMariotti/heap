@@ -13,8 +13,6 @@
  *   mayor a 0  si  a > b
  */
 typedef int (*cmp_func_t) (const void *a, const void *b);
-typedef void (*mostrar_func_t) (void *a);
-
 
 /* Función de heapsort genérica. Esta función ordena mediante heap_sort
  * un arreglo de punteros opacos, para lo cual requiere que se
@@ -34,7 +32,6 @@ void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp);
 /* Tipo utilizado para el heap. */
 typedef struct heap heap_t;
 
-void heap_mostrar(heap_t * heap, mostrar_func_t mostrar);
 /* Crea un heap. Recibe como único parámetro la función de comparación a
  * utilizar. Devuelve un puntero al heap, el cual debe ser destruido con
  * heap_destruir().

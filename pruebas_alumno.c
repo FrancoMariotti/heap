@@ -1,9 +1,11 @@
 #include "heap.h"
 #include "testing.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define VOLUMEN 10000
-#define CANT_NULLS 15
+#define CANT_HEAPS 100
 
 /* ******************************************************************
  *                   PRUEBAS UNITARIAS ALUMNO
@@ -14,14 +16,17 @@
 void prueba_heap_crear() {
     printf("INICIO DE PRUEBAS CON CREACION DE HEAP \n");
     
-    heap_t* heap1 = heap_crear(NULL);
+    heap_t* heap = heap_crear(NULL);
     print_test("Se creo heap", heap);
     print_test("Heap recien creado vacio", heap_esta_vacio(heap));
     print_test("Heap recien creado cantidad 0", heap_cantidad(heap) == 0);
     print_test("Heap recien creado ver máximo NULL", !heap_ver_max(heap));
 
-    heap_destruir(c1, NULL);
+    heap_destruir(heap, NULL);
     print_test("Destruyo el heap", true);
+}
+int _strcmp(const void * a, const void *b) {
+    return strcmp((char *) a, (char *) b);
 }
 /*
  * Prueba de encolar y desencolar sobre un heap vacio.
@@ -29,7 +34,7 @@ void prueba_heap_crear() {
 void prueba_heap_vacia() {
     printf("INICIO DE PRUEBAS CON heap VACIA\n");
     
-    heap_t* heap = heap_crear();
+    heap_t* heap = heap_crear(_strcmp);
     print_test("Creo heap vacio", heap);
     print_test("Desencolar heap vacio", heap_esta_vacio(heap) && heap_desencolar(heap) == NULL);
 
@@ -103,8 +108,10 @@ typedef struct nodo_prueba {
 void heap_vacio_destruir(void* heap){
     heap_destruir((heap_t*)heap, NULL);
 }
-int nodocmp(void *a, void *b) {
-    return numcmp((nodo_prueba_t *)(a->clave), (nodo_prueba_t *)(b->clave));
+int nodocmp(const void *a, const void *b) {
+    nodo_prueba_t * a_c = (nodo_prueba_t *) a;
+    nodo_prueba_t * b_c = (nodo_prueba_t *) b;
+    return numcmp(&a_c->clave, &b_c->clave);
 }
 /*
  * Pruebo encolar elementos que deben ser 
@@ -133,9 +140,7 @@ void prueba_heap_destruir(){
 void pruebas_heap_alumno() {
     prueba_heap_crear();
     prueba_heap_vacia();
-    prueba_heap_tipos();
     prueba_heap_volumen(VOLUMEN);
     prueba_heap_volumen(150000);
-    prueba_heap_null();
     prueba_heap_destruir();
 }   

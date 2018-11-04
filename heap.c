@@ -46,13 +46,13 @@ heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp) {
 	
 	if(!heap)return NULL;
 	
-	for(int i=0;i<n;i++) heap->datos[i]=arreglo[i];
+	for(int i=0;i<n;i++) heap_encolar(heap,arreglo[i]);
 	
 	return heap;
 }
 
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp) {
-
+	
 }
 
 
@@ -69,6 +69,26 @@ void *heap_ver_max(const heap_t *heap){
 	return heap->datos[0];
 }
 
+bool heap_encolar(heap_t *heap, void *elem) {
+
+}
+
+void *heap_desencolar(heap_t *heap) {
+	if(heap_esta_vacio(heap))return NULL;
+	
+	void* maximo=heap->datos[0];
+	
+	swap(heap->datos[0],heap->datos[heap->cant-1]);
+	
+	heap->cantidad--;
+	
+	
+			heap_redimensionar(heap, heap->tam / 2);
+
+	
+	return maximo;
+}
+
 void heap_destruir(heap_t *heap, void destruir_elemento(void *e)) {
 	if(destruir_elemento){
 		for(int i=0;i<heap->cantidad;i++) destruir_elemento(heap->datos[i]);		
@@ -78,16 +98,6 @@ void heap_destruir(heap_t *heap, void destruir_elemento(void *e)) {
 	free(heap);
 }
 
-
-bool heap_encolar(heap_t *heap, void *elem) {
-
-}
-
-void *heap_desencolar(heap_t *heap) {
-
-}
-
-
 void pruebas_heap_alumno(void) {
 
 }
@@ -96,10 +106,10 @@ void pruebas_heap_alumno(void) {
  *                FUN. AUXILIARES
  *****************************************************/
 
-void swap(void * datos[], size_t i, size_t j) {
-	void * aux = datos[i];
-	datos[i] = datos[j];
-	datos[j] = datos[i];
+void swap(void * dato1,void* dato2) {
+	void * aux = datos1;
+	dato1 = dato2;
+	datos2 = aux;
 }
 
 void upheap(heap_t * heap, size_t i) {
@@ -113,3 +123,4 @@ void upheap(heap_t * heap, size_t i) {
 		upheap(heap, PADRE(i));
 	}
 }
+void downheap(heap_t * 

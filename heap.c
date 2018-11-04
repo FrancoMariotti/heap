@@ -8,13 +8,14 @@
 #define FACTOR_ENC 0.8
 #define FACTOR_CRECIMIENTO 3
 #define FACTOR_DECRECIMIENTO 0.25
+
 #define PADRE(hijo) (size_t)((hijo - 1) / 2)
 #define HIJO_IZQ(padre) (size_t)((padre * 2) + 1)
 #define HIJO_DER(padre) (size_t)((padre * 2) + 2)
 
 /* Dado dos elementos, se intercambian entre ellos.
  */
-void swap(void * elemento_1, void * elemento_2);
+void swap(void * datos[], size_t i, size_t j);
 void upheap(heap_t * heap, size_t i);
 /* Dado un heap, se redimensiona el vector
  * de datos del heap. Devuelve true en caso
@@ -33,6 +34,12 @@ struct heap{
 	size_t tam;
 };
 
+void heap_mostrar(heap_t * heap, mostrar_func_t mostrar) {
+
+	for(size_t i = 0; i < heap->cant; i++){
+		mostrar(heap->datos[i]);
+	}
+}
 /*****************************************************
  *                PRIMITIVAS HEAP
  *****************************************************/
@@ -97,25 +104,23 @@ bool heap_encolar(heap_t *heap, void *elem) {
 
 	heap->datos[cant] = elem;
 	upheap(heap, cant);	
-	
 	heap->cant++;
-
+	
 	return true;
 }
 
 void *heap_desencolar(heap_t *heap) {
 	if(heap_esta_vacio(heap))return NULL;
 	
-	void* maximo=heap->datos[0];
-	
-	swap(heap->datos[0],heap->datos[heap->cant-1]);
-	
+	void * maximo = heap->datos[0];
 	heap->cant--;
+
+	swap(heap->datos, 0, heap->cant);
 	
 	if((double) heap->cant < (double) heap->tam * FACTOR_DECRECIMIENTO) 
-		heap_redimensionar(heap, heap->tam/2);
+		heap_redimensionar(heap, heap->tam / 2);
 
-	downheap(heap->datos,heap->cant,0,heap->cmp);
+	downheap(heap->datos, heap->cant, 0, heap->cmp);
 
 	return maximo;
 }
@@ -132,41 +137,40 @@ void heap_destruir(heap_t *heap, void destruir_elemento(void *e)) {
  *                FUN. AUXILIARES
  *****************************************************/
 
-void swap(void * elemento_1, void * elemento_2) {
-	void * aux = elemento_1;
-	elemento_1 = elemento_2;
-	elemento_2 = aux;
+void swap(void * datos[], size_t i, size_t j) {
+	void * aux = datos[i];
+	datos[i] = datos[j];
+	datos[j] = aux;
 }
 
 void upheap(heap_t * heap, size_t i) {
 	if(i <= 0) return;
 	cmp_func_t cmp = heap->cmp;
 	void ** datos = heap->datos;
-
 	if(cmp(datos[i], datos[PADRE(i)]) > 0) {
-		swap(datos[i], datos[PADRE(i)]);
+		swap(datos, i, PADRE(i));
 		upheap(heap, PADRE(i));
 	}
 }
 
-void downheap(void** datos,size_t cantidad, size_t pos_inicial,cmp_func_t cmp){
+void downheap(void** datos, size_t cantidad, size_t pos_inicial, cmp_func_t cmp){
 	if(pos_inicial >= cantidad) return;
 	
 	size_t pos_hijo_izq = HIJO_IZQ(pos_inicial);
 	size_t pos_hijo_der = HIJO_DER(pos_inicial);
 	
-	if(pos_hijo_izq >= cantidad)return;
+	if(pos_hijo_izq >= cantidad) return;
 	
-	if(cmp(datos[pos_inicial],datos[pos_hijo_izq])  > 0){
-		swap(datos[pos_inicial], datos[pos_hijo_izq]);
-		downheap(datos,cantidad,pos_hijo_izq, cmp);
+	if(cmp(datos[pos_inicial], datos[pos_hijo_izq]) > 0){
+		swap(datos, pos_inicial, pos_hijo_izq);
+		downheap(datos, cantidad, pos_hijo_izq, cmp);
 	}
 	
-	if(pos_hijo_der >= cantidad)return;
+	if(pos_hijo_der >= cantidad) return;
 	
-	if(cmp(datos[pos_inicial],datos[pos_hijo_der]) > 0){
-		swap(datos[pos_inicial], datos[pos_hijo_der]);
-		downheap(datos,cantidad,pos_hijo_der, cmp);
+	if(cmp(datos[pos_inicial], datos[pos_hijo_der]) > 0){
+		swap(datos, pos_inicial, pos_hijo_der);
+		downheap(datos, cantidad, pos_hijo_der, cmp);
 	}	
 }
 

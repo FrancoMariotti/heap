@@ -28,6 +28,12 @@ void prueba_heap_crear() {
 int _strcmp(const void * a, const void *b) {
     return strcmp((char *) a, (char *) b);
 }
+void mostrar_char(void * a) {
+    printf("%c - ", *(char *)a);
+}
+void mostrar_int(void * a) {
+    printf("%d - ", *(int *)a);
+}
 /*
  * Prueba de encolar y desencolar sobre un heap vacio.
  */
@@ -39,19 +45,23 @@ void prueba_heap_vacia() {
     print_test("Desencolar heap vacio", heap_esta_vacio(heap) && heap_desencolar(heap) == NULL);
 
     // Apilo y desapilo un elemento.
-    char * elemento = "A";
+    heap_mostrar(heap, mostrar_char);
+    char elemento = 'A';
     
     print_test("Encolar un elemento en heap vacio", heap_encolar(heap, &elemento) && heap_ver_max(heap) == &elemento);
     print_test("Desencolo", heap_desencolar(heap) == &elemento);
     print_test("Desencolo", heap_desencolar(heap) == NULL);
 
-    char *elemento1 = "A", *elemento2 = "B";
+    char elemento1 = 'A', elemento2 = 'B';
     print_test("Encolo un elemento", heap_encolar(heap, &elemento1) && heap_ver_max(heap) == &elemento1);
     print_test("Encolo otro elemento", heap_encolar(heap, &elemento2) && heap_ver_max(heap) == &elemento2);
-    print_test("Desencolo elemento1", heap_desencolar(heap) == &elemento1);
+    printf("Elemento maximo %c\n", *(char *)heap_ver_max(heap));
+     heap_mostrar(heap, mostrar_char);
     print_test("Desencolo elemento2", heap_desencolar(heap) == &elemento2);
+    print_test("Desencolo elemento1", heap_desencolar(heap) == &elemento1);
     print_test("Desencolo heap vacio", heap_desencolar(heap) == NULL);
     print_test("Max heap vacio", heap_ver_max(heap) == NULL);
+    
 
     heap_destruir(heap, NULL);
     print_test("Destruyo el heap", true);
@@ -63,7 +73,7 @@ void prueba_heap_vacia() {
  * Donde: a y b son enteros.
  */
 int numcmp(const void * a, const void *b) {
-    return *(int *)b - *(int *)a;
+    return *(int *)a - *(int *)b;
 }
 /*
  * Pruebas sobre una heap con volumen de datos.
@@ -77,7 +87,6 @@ void prueba_heap_volumen(int volumen) {
     if(!elementos) return;
     
     bool ok = true;
-
     for(int i = 0; i < volumen; i++) {
         elementos[i] = i;
         ok &= heap_encolar(heap, &elementos[i]);
@@ -86,10 +95,16 @@ void prueba_heap_volumen(int volumen) {
     } 
     print_test("Se encolaron los elementos", ok);
     
+    heap_mostrar(heap, mostrar_int);
+    printf("\n");
+    
     ok = true;
     for(int i = volumen - 1; i >= 0; i--) {
         ok &= heap_desencolar(heap) == &elementos[i];
-        if(!ok) break;
+        heap_mostrar(heap, mostrar_int);
+
+        printf("\n");
+        //if(!ok) break;
     } 
     print_test("Se desencolaron los elementos", ok && heap_esta_vacio(heap));
     heap_destruir(heap, NULL);
@@ -140,7 +155,7 @@ void prueba_heap_destruir(){
 void pruebas_heap_alumno() {
     prueba_heap_crear();
     prueba_heap_vacia();
-    prueba_heap_volumen(VOLUMEN);
-    prueba_heap_volumen(150000);
+    prueba_heap_volumen(10);
+    //prueba_heap_volumen(150000);
     prueba_heap_destruir();
 }   

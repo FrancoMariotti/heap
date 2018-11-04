@@ -7,11 +7,10 @@
 #define TAM_INICIAL 100
 #define FACTOR_ENC 0.8
 #define FACTOR_CRECIMIENTO 3
-
+#define FACTOR_DECRECIMIENTO 0.25
 #define PADRE(hijo) (size_t)((hijo - 1) / 2)
 #define HIJO_IZQ(padre) (size_t)((padre * 2) + 1)
 #define HIJO_DER(padre) (size_t)((padre * 2) + 2)
-#define FACTOR_DECRECIMIENTO 0.25
 
 /* Dado dos elementos, se intercambian entre ellos.
  */

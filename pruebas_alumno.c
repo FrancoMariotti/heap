@@ -3,17 +3,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <stdlib.h>
 
-#define VOLUMEN 10000
-#define VOLUMEN_2 100000
+
+#define VOLUMEN 100000
+#define VOLUMEN_2 10000
 #define CANT_HEAPS 100
 
 /* ******************************************************************
  *                   PRUEBAS UNITARIAS ALUMNO
  * *****************************************************************/
+bool esta_ordenado_asc(void * elementos[], size_t n, cmp_func_t cmp) {
+    for(size_t i = 0; i < n - 1; i++) {
+        if(cmp(elementos[i], elementos[i + 1]) > 0)
+            return false;
+    }
+    return true;
+}
 /*
  * Prueba de creación de múltiples heaps.
  */
+
 void prueba_heap_crear() {
     printf("INICIO DE PRUEBAS CON CREACION DE HEAP \n");
     
@@ -73,18 +84,20 @@ int numcmp(const void * a, const void *b) {
 void prueba_heap_volumen(int volumen) {
     printf("INICIO DE PRUEBAS DE VOLUMEN (%d) \n", volumen);
 
-    heap_t * heap = heap_crear(numcmp);
+    void ** auxiliar = malloc(volumen * sizeof(void *));
     int * elementos = malloc(volumen * sizeof(int));
-    if(!elementos) return;
+    if(!elementos || !auxiliar) return;
     
     bool ok = true;
     for(int i = 0; i < volumen; i++) {
         elementos[i] = i;
-        ok &= heap_encolar(heap, &elementos[i]);
-        ok &= heap_ver_max(heap) == &elementos[i];
-        if(!ok) break;
-    } 
-    print_test("Se encolaron los elementos", ok);    
+        auxiliar[i] = &elementos[i];
+    }
+
+    heap_t * heap = heap_crear_arr(auxiliar, volumen, numcmp);
+    
+    print_test("Se encolaron los elementos", heap);
+      
     ok = true;
     for(int i = volumen - 1; i >= 0; i--) {
         ok &= heap_desencolar(heap) == &elementos[i];
@@ -94,6 +107,7 @@ void prueba_heap_volumen(int volumen) {
     heap_destruir(heap, NULL);
     print_test("Destruyo el heap", true);
     free(elementos);
+    free(auxiliar);
 }
 typedef struct nodo_prueba {
     int clave;
@@ -133,6 +147,23 @@ void prueba_heap_destruir(){
     free(heap);
 }
 
+void pruebas_heap_heapsort(size_t volumen) {
+    void ** auxiliar = malloc(volumen * sizeof(void *));
+    int * elementos = malloc(volumen * sizeof(int));
+    if(!elementos || !auxiliar) return;
+    srand((unsigned int)time(NULL));
+    
+    for(int i = 0; i < volumen; i++) {
+        elementos[i] = rand();
+        auxiliar[i] = &elementos[i];
+    }
+    print_test("Creo array desordenado.", !esta_ordenado_asc(auxiliar, volumen, numcmp));
+    heap_sort(auxiliar, volumen, numcmp);
+    print_test("Ordeno con heapsort.", esta_ordenado_asc(auxiliar, volumen, numcmp));
+    free(elementos);
+    free(auxiliar);
+}
+
 /*
  * Se ejecutan todas las pruebas de heap.
  */
@@ -141,5 +172,6 @@ void pruebas_heap_alumno() {
     prueba_heap_vacia();
     prueba_heap_volumen(VOLUMEN);
     prueba_heap_volumen(VOLUMEN_2);
+    pruebas_heap_heapsort(VOLUMEN);
     prueba_heap_destruir();
 }   

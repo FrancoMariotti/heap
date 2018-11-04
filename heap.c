@@ -4,17 +4,22 @@
 struct heap{
 	void *datos;
 	cmp_func_t heap_cmp;
-	size_t cantidad;
+	size_t cant;
 	size_t tam;
 };
 
 heap_t *heap_crear(cmp_func_t cmp) {
-
+	
 }
 
 
 heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp) {
-
+	
+	heap_t* heap=heap_crear(cmp);
+	
+	for(int i=0;i<n;i++) heap->datos[i]=arreglo[i];
+	
+	return heap;
 }
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp) {
 

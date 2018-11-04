@@ -11,8 +11,16 @@
 #define HIJO_IZQ(padre) (size_t)((padre * 2) + 1)
 #define HIJO_DER(padre) (size_t)((padre * 2) + 2)
 
+/* Dado dos elementos, se intercambian entre ellos.
+ */
 void swap(void * elemento_1, void * elemento_2);
 void upheap(heap_t * heap, size_t i);
+/* Dado un heap, se redimensiona el vector
+ * de datos del heap. Devuelve true en caso
+ * de éxito, false en caso contrario.
+ * Pre: heap fue creado.
+ * Post: la capacidad del heap será nueva_cantidad.
+ */
 bool heap_redimensionar(heap_t * heap, size_t nueva_capacidad);
 
 struct heap{
@@ -44,9 +52,7 @@ heap_t *heap_crear(cmp_func_t cmp) {
 }
 
 heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp) {
-	
 	heap_t* heap = heap_crear(cmp);
-	
 	if(!heap) return NULL;
 	
 	for(int i=0;i<n;i++) heap_encolar(heap,arreglo[i]);
@@ -55,20 +61,25 @@ heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp) {
 }
 
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp) {
+	heap_t * heap = heap_crear_arr(elementos, cmp);
+
+	for(size_t i = cant - 1; i >= 0; i--) 
+		elementos[i] = heap_desencolar(heap);
 	
+	heap_destruir(heap);
 }
 
 
-bool heap_esta_vacio(const heap_t *heap){
+bool heap_esta_vacio(const heap_t *heap) {
 	return heap->cant == 0;	
 }
 
-size_t heap_cantidad(const heap_t *heap){
+size_t heap_cantidad(const heap_t *heap) {
 	return heap->cant;
 }
 
-void *heap_ver_max(const heap_t *heap){
-	if (heap_esta_vacio(heap)) return NULL;
+void *heap_ver_max(const heap_t *heap) {
+	if(heap_esta_vacio(heap)) return NULL;
 	return heap->datos[0];
 }
 
@@ -104,7 +115,6 @@ void *heap_desencolar(heap_t *heap) {
 
 	return maximo;
 }
-
 void heap_destruir(heap_t *heap, void destruir_elemento(void *e)) {
 	if(destruir_elemento){
 		for(int i=0;i<heap->cant;i++) destruir_elemento(heap->datos[i]);		

@@ -46,7 +46,7 @@ heap_t *heap_crear(cmp_func_t cmp);
  *
  * Excepto por la complejidad, es equivalente a crear un heap vacío y encolar
  * los valores de uno en uno
-*/
+ */
 heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp);
 
 /* Elimina el heap, llamando a la función dada para cada elemento del mismo.

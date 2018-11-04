@@ -175,3 +175,17 @@ bool heap_redimensionar(heap_t * heap, size_t nueva_capacidad) {
 	heap->tam = nueva_capacidad;
 	return true;
 }
+void _heapify(void ** datos,size_t n,size_t pos_inicial,cmp_func_t cmp){
+	if(pos_inicial >= cantidad) return;
+	
+	_heapify(datos,n,HIJO_IZQ(pos_inicial),cmp);
+	
+	_heapify(datos,n,HIJO_DER(pos_inicial),cmp);
+	
+	downheap(datos,n,pos_inicial,cmp);
+
+}
+	
+void heapify(void ** datos,size_t n,cmp_func_t cmp){
+	_heapify(datos,n,0,cmp);
+}
